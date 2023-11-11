@@ -2,6 +2,6 @@
 
 export default function Home() {
   return (
-    <main>Hello TIKTEK</main>
+    <main>Hello TIKTEK blog</main>
   )
 }
