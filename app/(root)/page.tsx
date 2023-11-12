@@ -69,9 +69,7 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {data &&
                 data.map((post: PostProps, index) => (
-                  <div key={post.id}>
-                    <Post {...post} />
-                  </div>
+                  <Post key={post.id} {...post} />
                 ))}
             </div>
           </div>

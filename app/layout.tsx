@@ -5,6 +5,8 @@ import { ReactNode } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ThemeProvider } from "@/components/ui/theme-provider";
+import { NextAuthProvider } from "@/components/Providers";
+import ToasterProvider from "@/components/ToastProvider";
 
 const poppinsFont = Poppins({
   subsets: ["latin"],
@@ -26,11 +28,14 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           enableSystem
           disableTransitionOnChange
         >
-          <div className="flex flex-col min-h-screen">
-            <Navbar />
-            <main className="flex-auto p-6">{children}</main>
-            <Footer />
-          </div>
+          <NextAuthProvider>
+            <ToasterProvider />
+            <div className="flex flex-col min-h-screen">
+              <Navbar />
+              <main className="flex-auto p-6">{children}</main>
+              <Footer />
+            </div>
+          </NextAuthProvider>
         </ThemeProvider>
       </body>
     </html>

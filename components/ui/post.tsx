@@ -17,18 +17,18 @@ export default function Post({
   const isEditable = true;
 
   return (
-    <div className={`w-full h-fit border rounded-md`}>
-      <div className="relative w-full bg-black h-[300px] rounded-t-md">
+    <div className={`w-full h-fit border rounded-md overflow-hidden`}>
+      <div className="relative w-full bg-black h-[300px]">
         {thumbnail ? (
           <Image
-            className="object-cover rounded-t-md"
+            className="object-cover"
             src={thumbnail}
             alt="Post thumbnail"
             fill
           />
         ) : (
           <Image
-            className="object-cover rounded-t-md"
+            className="object-cover"
             src="/thumbnail-placeholder.png"
             alt="Post thumbnail"
             fill

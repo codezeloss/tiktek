@@ -3,6 +3,9 @@ import Post from "@/components/ui/post";
 import Container from "@/components/ui/container";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { redirect } from "next/navigation";
 
 const data: PostProps[] = [
   {
@@ -58,7 +61,14 @@ const data: PostProps[] = [
   },
 ];
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    //toast.error("You are not signed in!");
+    redirect("/");
+  }
+
   return (
     <main className="">
       <Container>

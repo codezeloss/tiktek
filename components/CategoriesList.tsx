@@ -22,10 +22,14 @@ export const categoriesData = [
 
 export default function CategoriesList() {
   return (
-    <div className="flex items-center gap-x-3">
+    <div className="flex items-center gap-3">
       {categoriesData &&
         categoriesData.map((category) => (
-          <Link key={category.id} href={`/categories/${category.name}`}>
+          <Link
+            className=""
+            key={category.id}
+            href={`/categories/${category.name}`}
+          >
             <Button size="sm" variant="outline">
               {category.name}
             </Button>

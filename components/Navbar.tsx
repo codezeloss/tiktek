@@ -3,19 +3,25 @@
 import Container from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/ui/mode-toggle";
-import { CpuIcon } from "lucide-react";
+import { PlusCircle } from "lucide-react";
 import Link from "next/link";
 import { LoginDialog } from "@/components/LoginDialog";
 import { useState } from "react";
+import { useSession } from "next-auth/react";
+import ProfileDropdown from "@/components/ProfileDropdown";
+import Spinner from "@/components/ui/spinner";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
-  const [openDialog, setOpenDialog] = useState(false);
+  const { status, data } = useSession();
+  const router = useRouter();
+  const [openLoginDialog, setOpenLoginDialog] = useState(false);
 
   return (
     <header className="border-b px-6">
       <LoginDialog
-        open={openDialog}
-        onOpen={() => setOpenDialog(!openDialog)}
+        open={openLoginDialog}
+        onOpen={() => setOpenLoginDialog(!openLoginDialog)}
       />
 
       <Container>
@@ -27,20 +33,43 @@ export default function Navbar() {
             Cipiux
           </Link>
 
+          {status === "loading" && <Spinner />}
+
           <div className="flex items-center gap-x-3">
-            <Button
-              size="default"
-              variant="outline"
-              onClick={() => setOpenDialog(true)}
-            >
-              Sign In
-            </Button>
+            {status !== "authenticated" ? (
+              <Button
+                size="default"
+                variant="secondary"
+                onClick={() => setOpenLoginDialog(true)}
+              >
+                Sign In
+              </Button>
+            ) : (
+              <div className="flex items-center gap-x-3">
+                <Button
+                  variant="ghost"
+                  className="text-sm font-semibold text-black dark:text-white flex items-center gap-1.5"
+                  onClick={() => router.push("/create-post")}
+                >
+                  <PlusCircle size={18} />
+                  Create post
+                </Button>
 
-            <Button size="default">Sign Up</Button>
+                <ProfileDropdown
+                  status={status}
+                  img_src={data?.user?.image}
+                  username={data?.user?.name}
+                />
+              </div>
+            )}
 
-            <div className="ml-1">
-              <ModeToggle />
-            </div>
+            {status === "loading" && (
+              <p className="text-sm font-semibold text-muted-foreground">
+                Loading...
+              </p>
+            )}
+
+            <ModeToggle />
           </div>
         </div>
       </Container>

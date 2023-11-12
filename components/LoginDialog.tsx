@@ -1,16 +1,15 @@
-import { Button } from "@/components/ui/button";
+"use client";
+
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import AuthButton from "@/components/ui/auth-button";
+import { signIn, useSession } from "next-auth/react";
+import Spinner from "@/components/ui/spinner";
 
 interface Props {
   open: boolean;
@@ -18,6 +17,10 @@ interface Props {
 }
 
 export function LoginDialog({ open, onOpen }: Props) {
+  const { status } = useSession();
+
+  if (status === "loading") return <Spinner />;
+
   return (
     <Dialog open={open} onOpenChange={onOpen}>
       <DialogContent className="max-w-[380px] sm:max-w-[425px] rounded-md">
@@ -27,8 +30,16 @@ export function LoginDialog({ open, onOpen }: Props) {
         </DialogHeader>
 
         <div className="flex flex-col gap-4 my-3">
-          <AuthButton img={"/github-logo.svg"} title="Sign in with Github" />
-          <AuthButton img={"/google-logo.svg"} title="Sign in with Google" />
+          <AuthButton
+            img={"/github-logo.svg"}
+            title="Sign in with Github"
+            handleClick={() => signIn("github")}
+          />
+          <AuthButton
+            img={"/google-logo.svg"}
+            title="Sign in with Google"
+            handleClick={() => signIn("google")}
+          />
         </div>
       </DialogContent>
     </Dialog>
