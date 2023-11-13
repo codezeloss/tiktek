@@ -1,86 +1,94 @@
 import { PostProps } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
-import { EditIcon, LinkIcon, TrashIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { formatDate } from "@/lib/utils";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import PostActions from "@/components/PostActions";
+import { ExternalLinkIcon } from "lucide-react";
 
-export default function Post({
+export default async function Post({
   id,
   title,
   content,
+  authorEmail,
   author,
-  date,
-  category,
-  links,
-  thumbnail,
+  createdAt,
+  categoryName,
+  imageUrl,
 }: PostProps) {
-  const isEditable = true;
+  const session = await getServerSession(authOptions);
+  const isEditable = session && session?.user?.email === authorEmail;
 
   return (
-    <div className={`w-full h-fit border rounded-md overflow-hidden`}>
-      <div className="relative w-full bg-black h-[300px]">
-        {thumbnail ? (
-          <Image
-            className="object-cover"
-            src={thumbnail}
-            alt="Post thumbnail"
-            fill
-          />
-        ) : (
-          <Image
-            className="object-cover"
-            src="/thumbnail-placeholder.png"
-            alt="Post thumbnail"
-            fill
-          />
-        )}
-
-        <Link href={""}>
-          <Button
-            className="absolute top-6 left-6 bg-white text-black shadow-md"
-            size="sm"
-            variant="ghost"
-          >
-            {category}
-          </Button>
-        </Link>
-      </div>
-
-      <div className="px-8 pt-2 pb-6">
-        <p className="text-xs font-normal mt-2 text-muted-foreground">
-          {author} | {date}
-        </p>
-        <h2 className="text-3xl font-semibold my-2">{title}</h2>
-        <p className="text-sm mb-4 font-normal text-gray-800 dark:text-gray-400 text-ellipsis">
-          {`${content.substring(0, 210)}...`}
-        </p>
-        <div className="flex items-center justify-between">
-          <div />
-          {isEditable && (
-            <div className="flex items-center gap-4 ml-auto">
-              <Link href={`/edit-post/${id}`}>
+    <>
+      <div className={`w-full h-fit border rounded-md overflow-hidden`}>
+        <div className="w-full h-[300px]">
+          <div className="relative w-full h-full">
+            {imageUrl ? (
+              <Image
+                className="object-cover"
+                src={imageUrl}
+                alt="Post thumbnail"
+                fill
+              />
+            ) : (
+              <Image
+                className="object-cover"
+                src="/thumbnail-placeholder.png"
+                alt="Post thumbnail"
+                fill
+              />
+            )}
+            <div className="opacity-0 hover:opacity-100 cursor-pointer flex hover:bg-black/50 absolute top-0 right-0 w-full h-full z-50 p-6 items-center justify-center">
+              <Link href={`/post/${id}`}>
                 <Button
-                  className="flex items-center gap-2"
-                  size="sm"
                   variant="secondary"
+                  size="lg"
+                  className="flex items-center gap-2"
                 >
-                  <EditIcon size={18} />
-                  Edit post
+                  <ExternalLinkIcon size={16} />
+                  Read post
                 </Button>
               </Link>
-              <Button
-                className="flex items-center gap-2"
-                size="sm"
-                variant="destructive"
-              >
-                <TrashIcon size={18} />
-                Delete post
-              </Button>
             </div>
-          )}
+            <Link href={`/categories/${categoryName}`}>
+              <Button
+                className="absolute top-6 left-6 bg-white text-black shadow-md"
+                size="sm"
+                variant="ghost"
+              >
+                {categoryName}
+              </Button>
+            </Link>{" "}
+          </div>
+        </div>
+
+        <div className="px-8 pt-2 pb-6">
+          <p className="text-xs font-normal mt-2 text-muted-foreground">
+            <span className="font-medium">
+              {author ? `${author.name} |` : ""}
+            </span>{" "}
+            {formatDate(createdAt)}
+          </p>
+
+          <h2 className="text-xl sm:text-3xl lg:text-2xl font-semibold my-2">{`${title.substring(
+            0,
+            16
+          )}...`}</h2>
+
+          <p className="text-xs sm:text-sm mb-4 font-normal text-gray-800 dark:text-gray-400 text-ellipsis">
+            {`${content.substring(0, 130)}...`}
+          </p>
+
+          <div className="flex items-center justify-between">
+            <div />
+            {isEditable && <PostActions id={id} />}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

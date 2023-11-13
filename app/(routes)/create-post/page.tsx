@@ -3,7 +3,6 @@ import PostForm from "@/components/PostForm";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
-import toast from "react-hot-toast";
 
 export default async function CreatePostPage() {
   const session = await getServerSession(authOptions);

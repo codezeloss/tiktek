@@ -1,5 +1,7 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { CategoryProps } from "@/types";
+import { getCategories } from "@/actions/getCategories";
 
 export const categoriesData = [
   {
@@ -20,11 +22,15 @@ export const categoriesData = [
   },
 ];
 
-export default function CategoriesList() {
+export const revalidate = 0;
+
+export default async function CategoriesList() {
+  const categories = await getCategories();
+
   return (
     <div className="flex items-center gap-3">
-      {categoriesData &&
-        categoriesData.map((category) => (
+      {categories &&
+        categories.map((category: CategoryProps) => (
           <Link
             className=""
             key={category.id}

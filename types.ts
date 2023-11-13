@@ -1,10 +1,19 @@
 export interface PostProps {
-  id: number;
+  id: string;
   title: string;
   content: string;
-  author: string;
-  date: string;
-  category: string;
+  authorEmail: string;
+  author?: {
+    name: string;
+  };
+  createdAt: string;
+  categoryName?: string;
   links: string[];
-  thumbnail: string;
+  imageUrl?: string;
+  publicId?: string;
+}
+
+export interface CategoryProps {
+  id: string;
+  name: string;
 }

@@ -24,7 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CategoryProps } from "@/types";
+import { CategoryProps, PostProps } from "@/types";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
@@ -48,8 +48,14 @@ const formSchema = z.object({
   publicId: z.string().optional(),
 });
 
-export default function PostForm() {
+export default function EditPostForm({ post }: { post: PostProps }) {
   const router = useRouter();
+
+  // ** Current Post data
+  const [postData, setPostData] = useState(post);
+  useEffect(() => {
+    setPostData(post);
+  }, [post]);
 
   const [categoriesData, setCategoriesData] = useState<CategoryProps[]>([]);
   const [addedLinks, setAddedLinks] = useState<string[]>([]);
@@ -60,12 +66,12 @@ export default function PostForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
-      content: "",
-      links: [],
-      selectedCategory: "",
-      imageUrl: "",
-      publicId: "",
+      title: postData.title || "",
+      content: postData.content || "",
+      links: postData.links || [],
+      selectedCategory: postData.categoryName || "",
+      imageUrl: postData.imageUrl || "",
+      publicId: postData.publicId || "",
     },
   });
 
@@ -98,10 +104,10 @@ export default function PostForm() {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       setIsLoading(true);
-      const response = await axios.post("/api/posts", values);
+      const response = await axios.put(`/api/posts/${postData.id}`, values);
       if (response.data) {
         router.push("/dashboard");
-        toast.success("Post created successfully");
+        toast.success("Post updated successfully");
         setIsLoading(false);
       }
     } catch (e) {
@@ -193,7 +199,12 @@ export default function PostForm() {
             render={({ field }) => (
               <FormItem className="w-full">
                 <FormLabel>Category</FormLabel>
-                <Select onValueChange={field.onChange}>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={
+                    postData.categoryName ? postData.categoryName : field.value
+                  }
+                >
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select a category to your post" />
@@ -218,7 +229,7 @@ export default function PostForm() {
           />
 
           <Button disabled={isLoading} type="submit" size="lg">
-            Add Post
+            Update Post
           </Button>
         </form>
       </Form>

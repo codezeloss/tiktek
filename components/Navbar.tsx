@@ -28,7 +28,7 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-20">
           <Link
             href="/"
-            className="text-3xl font-bold text-black dark:text-white flex items-center gap-2"
+            className="text-2xl md:text-3xl font-bold text-black dark:text-white flex items-center gap-2"
           >
             Cipiux
           </Link>
