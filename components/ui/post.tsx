@@ -66,12 +66,12 @@ export default async function Post({
 
           <Link href={`/post/${id}`}>
             <h2 className="text-xl sm:text-2xl font-semibold my-2 hover:underline cursor-pointer">
-              {title}
+              {title?.substring(0, 44)}...
             </h2>
           </Link>
 
-          <p className="text-xs sm:text-sm mb-4 font-normal text-gray-800 dark:text-gray-400 text-ellipsis text-justify h-14 md:h-16">
-            {`${content.substring(0, 250)}...`}
+          <p className="text-xs sm:text-sm mb-4 font-normal text-gray-800 dark:text-gray-400 text-ellipsis text-justify h-20 md:h-24 lg:h-28 xl:h-20">
+            {content?.substring(0, 170)}...
           </p>
 
           <div className="flex items-center justify-between gap-4">

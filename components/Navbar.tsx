@@ -48,7 +48,7 @@ export default function Navbar() {
               <div className="flex items-center gap-x-3">
                 <Button
                   variant="ghost"
-                  className="text-sm font-semibold text-black dark:text-white flex items-center gap-1.5"
+                  className="hidden md:flex text-sm font-semibold text-black dark:text-white items-center gap-1"
                   onClick={() => router.push("/create-post")}
                 >
                   <PlusCircle size={18} />

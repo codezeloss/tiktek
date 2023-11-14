@@ -26,6 +26,7 @@ export default function PostActions({ id }: { id: string }) {
       setIsLoading(true);
       const response = await axios.delete(`/api/posts/${id}`);
       if (response.data) {
+        console.log(response.data);
         router.refresh();
         toast.success("Post deleted successfully");
         const { publicId } = await response.data;
