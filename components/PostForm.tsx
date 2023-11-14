@@ -14,9 +14,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { ImageIcon, PlusIcon } from "lucide-react";
+import { ImageIcon, PlusIcon, Trash2Icon, UploadIcon } from "lucide-react";
 import CustomLink from "@/components/ui/custom-link";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import {
   Select,
   SelectContent,
@@ -28,6 +28,8 @@ import { CategoryProps } from "@/types";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { CldUploadButton, CldUploadWidgetResults } from "next-cloudinary";
+import Image from "next/image";
 
 const formSchema = z.object({
   title: z
@@ -55,6 +57,7 @@ export default function PostForm() {
   const [addedLinks, setAddedLinks] = useState<string[]>([]);
   const [enteredLink, setEnteredLink] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
+  const [uploadedImage, setUploadedImage] = useState("");
 
   // !! Form Schema
   const form = useForm<z.infer<typeof formSchema>>({
@@ -62,7 +65,7 @@ export default function PostForm() {
     defaultValues: {
       title: "",
       content: "",
-      links: [],
+      links: addedLinks,
       selectedCategory: "",
       imageUrl: "",
       publicId: "",
@@ -75,6 +78,7 @@ export default function PostForm() {
 
     if (enteredLink.trim() !== "") {
       setAddedLinks((prev: string[]) => [...prev, enteredLink]);
+      form.setValue("links", addedLinks);
       setEnteredLink("");
     }
   };
@@ -82,6 +86,46 @@ export default function PostForm() {
   // ** Delete link
   const deleteLink = (index: number) => {
     setAddedLinks((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  // ** Post image upload
+  const handleImageUpload = (result: CldUploadWidgetResults) => {
+    setIsLoading(true);
+    const info = result.info as object;
+
+    if ("secure_url" in info && "public_id" in info) {
+      const url = info.secure_url as string;
+      const public_id = info.public_id as string;
+
+      setUploadedImage(url);
+      form.setValue("imageUrl", url);
+      form.setValue("publicId", public_id);
+      setIsLoading(false);
+    }
+  };
+
+  // ** Post image remove
+  const removeUploadedImage = async (e: FormEvent) => {
+    e.preventDefault();
+
+    try {
+      setIsLoading(false);
+      const response = await axios.post("/api/removeImage", {
+        publicId: form.getValues("publicId"),
+      });
+
+      if (response.data.message === "success") {
+        toast.success("Image removed");
+        setUploadedImage("");
+        form.setValue("publicId", "");
+        form.setValue("imageUrl", "");
+      }
+    } catch (e) {
+      console.log(e);
+      toast.error("Cannot remove the image");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // ** Fetch Categories
@@ -113,7 +157,7 @@ export default function PostForm() {
   };
 
   return (
-    <>
+    <div className="w-full h-full">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <FormField
@@ -156,6 +200,7 @@ export default function PostForm() {
                       {addedLinks &&
                         addedLinks.map((link: string, index: number) => (
                           <CustomLink
+                            key={index}
                             link={link}
                             deleteLink={() => deleteLink(index)}
                           />
@@ -163,9 +208,10 @@ export default function PostForm() {
                     </div>
                     <FormControl>
                       <Input
+                        {...field}
                         placeholder="Past the link and click on Add"
-                        onChange={(e) => setEnteredLink(e.target.value)}
                         value={enteredLink}
+                        onChange={(e) => setEnteredLink(e.target.value)}
                       />
                     </FormControl>
                     <FormMessage />
@@ -173,8 +219,9 @@ export default function PostForm() {
                 )}
               />
               <Button
+                disabled={isLoading}
                 variant="outline"
-                className="flex items-center gap-1"
+                className="w-fit flex items-center gap-1.5"
                 onClick={addLink}
               >
                 <PlusIcon size={18} />
@@ -183,9 +230,63 @@ export default function PostForm() {
             </div>
           </div>
 
-          <div className="w-full h-[350px] bg-gray-200 rounded-md flex items-center justify-center text-gray-800">
-            <ImageIcon size={32} />
-          </div>
+          <FormField
+            control={form.control}
+            name="imageUrl"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>Image</FormLabel>
+                <FormControl>
+                  <div className="space-y-2">
+                    <div>
+                      <div className="relative w-full h-[350px] bg-gray-200 rounded-md flex items-center justify-center text-gray-800">
+                        {(uploadedImage !== "" ||
+                          form.getValues("publicId") !== "") && (
+                          <Image
+                            className="absolute object-cover"
+                            src={uploadedImage}
+                            alt="Post's uploaded image"
+                            fill
+                          />
+                        )}
+                      </div>
+                    </div>
+
+                    <div>
+                      {uploadedImage === "" ||
+                      form.getValues("publicId") === "" ? (
+                        <CldUploadButton
+                          uploadPreset={
+                            process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
+                          }
+                          onUpload={handleImageUpload}
+                        >
+                          <Button
+                            disabled={isLoading}
+                            variant="outline"
+                            className="flex items-center gap-2"
+                          >
+                            <UploadIcon size={18} /> Upload image
+                          </Button>
+                        </CldUploadButton>
+                      ) : (
+                        <Button
+                          disabled={isLoading}
+                          variant="destructive"
+                          className="flex items-center gap-2"
+                          onClick={removeUploadedImage}
+                        >
+                          <Trash2Icon size={18} /> Remove image
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </FormControl>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           <FormField
             control={form.control}
@@ -222,6 +323,6 @@ export default function PostForm() {
           </Button>
         </form>
       </Form>
-    </>
+    </div>
   );
 }

@@ -11,8 +11,8 @@ export default function Footer() {
   return (
     <footer className="border-t">
       <Container>
-        <div className="flex items-center h-16 justify-between px-6">
-          <p className="text-center text-xs text-black dark:text-white text-gray-400">
+        <div className="h-16 flex items-center justify-between px-6">
+          <p className="text-center text-xs dark:text-white text-muted-foreground">
             &copy; 2024 Cipiux, Inc. All rights reserved
           </p>
 

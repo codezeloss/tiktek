@@ -66,16 +66,22 @@ export default async function PostPage({
               ))}
           </div>
 
-          <p className="text-muted-foreground text-sm font-normal">
-            Posted by:{" "}
-            <span className="font-medium">
-              {post.author ? post.author.name : "Anonymous"}
-            </span>
-          </p>
-          <p className="text-muted-foreground text-sm font-normal">
-            Published on:{" "}
-            <span className="font-medium">{formatDate(post.createdAt)}</span>
-          </p>
+          <div className="pt-4">
+            <div className="text-muted-foreground text-xs font-normal space-y-2">
+              <p>
+                Posted by:{" "}
+                <span className="font-medium">
+                  {post.author ? post.author.name : "Anonymous"}
+                </span>
+              </p>
+              <p>
+                Published on:{" "}
+                <span className="font-medium">
+                  {formatDate(post.createdAt)}
+                </span>
+              </p>
+            </div>
+          </div>
         </div>
       </Container>
     </main>

@@ -28,14 +28,10 @@ export default async function CategoriesList() {
   const categories = await getCategories();
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex items-center flex-wrap gap-3">
       {categories &&
         categories.map((category: CategoryProps) => (
-          <Link
-            className=""
-            key={category.id}
-            href={`/categories/${category.name}`}
-          >
+          <Link key={category.id} href={`/categories/${category.name}`}>
             <Button size="sm" variant="outline">
               {category.name}
             </Button>

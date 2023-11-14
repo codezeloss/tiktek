@@ -13,9 +13,9 @@ export default async function CategoryPage({
   const posts: PostProps[] = await getPostsByCategoryName(params.categoryName);
 
   return (
-    <main>
+    <main className="w-full h-full">
       <Container>
-        <div className="space-y-6">
+        <div className="space-y-6 w-full h-full">
           <h1 className="font-semibold text-xl sm:text-2xl">
             {decodeURIComponent(params.categoryName)}
           </h1>

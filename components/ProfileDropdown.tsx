@@ -14,6 +14,7 @@ import { signOut } from "next-auth/react";
 import Link from "next/link";
 import Spinner from "@/components/ui/spinner";
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
+import { useState } from "react";
 
 interface Props {
   img_src: any;
@@ -22,6 +23,8 @@ interface Props {
 }
 
 export default function ProfileDropdown({ img_src, username, status }: Props) {
+  const [isLoading, setIsLoading] = useState(false);
+
   if (status === "loading") return <Spinner />;
 
   return (
@@ -60,10 +63,15 @@ export default function ProfileDropdown({ img_src, username, status }: Props) {
         </DropdownMenuGroup>
         <DropdownMenuGroup className="w-full px-2 mt-2">
           <Button
+            disabled={isLoading}
             className="w-full flex gap-x-2 items-center font-medium"
             variant="destructive"
             size="default"
-            onClick={() => signOut()}
+            onClick={async () => {
+              setIsLoading(true);
+              await signOut();
+              setIsLoading(false);
+            }}
           >
             <LogOutIcon size={16} />
             Sign out

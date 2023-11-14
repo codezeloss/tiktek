@@ -8,7 +8,6 @@ export default async function CreatePostPage() {
   const session = await getServerSession(authOptions);
 
   if (!session) {
-    //toast.error("You are not signed in!");
     redirect("/");
   }
 

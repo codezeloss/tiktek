@@ -30,7 +30,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         >
           <NextAuthProvider>
             <ToasterProvider />
-            <div className="flex flex-col min-h-screen">
+            <div className="flex flex-col w-full h-full min-h-screen">
               <Navbar />
               <main className="flex-auto p-6">{children}</main>
               <Footer />

@@ -15,6 +15,11 @@ export default function PostActions({ id }: { id: string }) {
   const [openAlertModal, setOpenAlertModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  // ** Delete post image
+  const deleteImage = async (publicId: string) => {
+    await axios.post("/api/removeImage", publicId);
+  };
+
   // ** Delete post
   const handleDeletePost = async () => {
     try {
@@ -23,6 +28,9 @@ export default function PostActions({ id }: { id: string }) {
       if (response.data) {
         router.refresh();
         toast.success("Post deleted successfully");
+        const { publicId } = await response.data;
+        await deleteImage(publicId);
+        setIsLoading(false);
       }
     } catch (e) {
       console.log(e);
@@ -41,7 +49,7 @@ export default function PostActions({ id }: { id: string }) {
         loading={isLoading}
       />
 
-      <div className="flex items-center gap-4 ml-auto">
+      <div className="flex items-center gap-2.5 ml-auto">
         <Link href={`/edit-post/${id}`}>
           <Button
             className="flex items-center gap-2"
@@ -49,7 +57,7 @@ export default function PostActions({ id }: { id: string }) {
             variant="secondary"
           >
             <EditIcon size={18} />
-            Edit post
+            Edit
           </Button>
         </Link>
         <Button
@@ -59,7 +67,7 @@ export default function PostActions({ id }: { id: string }) {
           onClick={() => setOpenAlertModal(true)}
         >
           <TrashIcon size={18} />
-          Delete post
+          Delete
         </Button>
       </div>
     </>
