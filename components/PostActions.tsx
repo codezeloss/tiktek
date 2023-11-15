@@ -17,16 +17,14 @@ export default function PostActions({ id }: { id: string }) {
 
   // ** Delete post image
   const deleteImage = async (publicId: string) => {
-    await axios.post(`${process.env.NEXTAUTH_URL}/api/removeImage`, publicId);
+    await axios.post(`/api/removeImage`, publicId);
   };
 
   // ** Delete post
   const handleDeletePost = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.delete(
-        `${process.env.NEXTAUTH_URL}/api/posts/${id}`
-      );
+      const response = await axios.delete(`/api/posts/${id}`);
       if (response.data) {
         console.log(response.data);
         toast.success("Post deleted successfully");

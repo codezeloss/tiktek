@@ -14,9 +14,8 @@ const getSinglePost = async (id: string) => {
     );
 
     if (response.ok) {
-      const categories = await response.json();
-      const posts = categories.posts;
-      return posts;
+      const post = await response.json();
+      return post;
     }
   } catch (e) {
     console.log(e);
