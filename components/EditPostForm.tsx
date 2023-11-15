@@ -53,17 +53,19 @@ const formSchema = z.object({
 export default function EditPostForm({ post }: { post: PostProps }) {
   const router = useRouter();
 
-  // ** Current Post data
-  const [postData, setPostData] = useState(post);
-  useEffect(() => {
-    setPostData(post);
-  }, [post]);
-
   const [categoriesData, setCategoriesData] = useState<CategoryProps[]>([]);
   const [addedLinks, setAddedLinks] = useState<string[]>([]);
   const [enteredLink, setEnteredLink] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
   const [uploadedImage, setUploadedImage] = useState("");
+  const [image, setImage] = useState("");
+
+  // ** Current Post data
+  const [postData, setPostData] = useState(post);
+  useEffect(() => {
+    setPostData(post);
+    setImage(post.imageUrl ? post.imageUrl : "");
+  }, [post]);
 
   // !! Form Schema
   const form = useForm<z.infer<typeof formSchema>>({
@@ -249,16 +251,14 @@ export default function EditPostForm({ post }: { post: PostProps }) {
                   <div className="space-y-2">
                     <div>
                       <div className="relative w-full h-[350px] bg-gray-200 rounded-md flex items-center justify-center text-gray-800">
-                        {postData.imageUrl !== "" && uploadedImage === "" && (
+                        {image !== "" && uploadedImage === "" ? (
                           <Image
                             className="absolute object-cover"
-                            src={postData.imageUrl}
-                            alt="Post's uploaded image"
+                            src={image}
+                            alt="Post uploaded image"
                             fill
                           />
-                        )}
-                        {(uploadedImage !== "" ||
-                          form.getValues("publicId") !== "") && (
+                        ) : (
                           <Image
                             className="absolute object-cover"
                             src={uploadedImage}
