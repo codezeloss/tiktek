@@ -4,7 +4,7 @@ import Container from "@/components/ui/container";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/utils/authOptions";
 import { redirect } from "next/navigation";
 import { getAuthorPosts } from "@/actions/getAuthorPosts";
 

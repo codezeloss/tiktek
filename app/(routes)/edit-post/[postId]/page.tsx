@@ -2,10 +2,8 @@ import Container from "@/components/ui/container";
 import EditPostForm from "@/components/EditPostForm";
 import { getSinglePost } from "@/actions/getSinglePost";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/utils/authOptions";
 import { redirect } from "next/navigation";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 
 export const revalidate = 0;
 
