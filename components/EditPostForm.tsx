@@ -249,13 +249,19 @@ export default function EditPostForm({ post }: { post: PostProps }) {
                   <div className="space-y-2">
                     <div>
                       <div className="relative w-full h-[350px] bg-gray-200 rounded-md flex items-center justify-center text-gray-800">
+                        {postData.imageUrl !== "" && uploadedImage === "" && (
+                          <Image
+                            className="absolute object-cover"
+                            src={postData.imageUrl}
+                            alt="Post's uploaded image"
+                            fill
+                          />
+                        )}
                         {(uploadedImage !== "" ||
                           form.getValues("publicId") !== "") && (
                           <Image
                             className="absolute object-cover"
-                            src={
-                              uploadedImage ? uploadedImage : postData.imageUrl
-                            }
+                            src={uploadedImage}
                             alt="Post's uploaded image"
                             fill
                           />
