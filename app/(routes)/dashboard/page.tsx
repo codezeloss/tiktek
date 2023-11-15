@@ -6,9 +6,18 @@ import { Button } from "@/components/ui/button";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/utils/authOptions";
 import { redirect } from "next/navigation";
-import { getAuthorPosts } from "@/actions/getAuthorPosts";
 
-export const revalidate = 0;
+const getAuthorPosts = async (email: string) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXTAUTH_URL}/api/authors/${email}`
+    );
+    const { posts } = await response.json();
+    return posts;
+  } catch (error) {
+    return null;
+  }
+};
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions);

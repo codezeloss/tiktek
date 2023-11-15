@@ -1,28 +1,20 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { CategoryProps } from "@/types";
-import { getCategories } from "@/actions/getCategories";
 
-export const categoriesData = [
-  {
-    id: 1,
-    name: "Technology",
-  },
-  {
-    id: 2,
-    name: "Tips & Tricks",
-  },
-  {
-    id: 3,
-    name: "AI",
-  },
-  {
-    id: 4,
-    name: "Programming",
-  },
-];
+const getCategories = async (): Promise<CategoryProps[] | null> => {
+  try {
+    const response = await fetch(`${process.env.NEXTAUTH_URL}/api/categories`);
 
-export const revalidate = 0;
+    if (response.ok) {
+      const categories = await response.json();
+      return categories;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+  return null;
+};
 
 export default async function CategoriesList() {
   const categories = await getCategories();

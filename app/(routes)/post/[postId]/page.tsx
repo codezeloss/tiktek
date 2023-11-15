@@ -1,4 +1,3 @@
-import { getSinglePost } from "@/actions/getSinglePost";
 import Image from "next/image";
 import Container from "@/components/ui/container";
 import { formatDate } from "@/lib/utils";
@@ -6,6 +5,24 @@ import Link from "next/link";
 import { LinkIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PostProps } from "@/types";
+
+const getSinglePost = async (id: string) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXTAUTH_URL}/api/posts/${id}`,
+      { cache: "no-store" }
+    );
+
+    if (response.ok) {
+      const categories = await response.json();
+      const posts = categories.posts;
+      return posts;
+    }
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+};
 
 export default async function PostPage({
   params,

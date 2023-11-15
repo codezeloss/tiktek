@@ -1,11 +1,26 @@
 import Container from "@/components/ui/container";
 import EditPostForm from "@/components/EditPostForm";
-import { getSinglePost } from "@/actions/getSinglePost";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/utils/authOptions";
 import { redirect } from "next/navigation";
 
-export const revalidate = 0;
+const getSinglePost = async (id: string) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXTAUTH_URL}/api/posts/${id}`,
+      { cache: "no-store" }
+    );
+
+    if (response.ok) {
+      const categories = await response.json();
+      const posts = categories.posts;
+      return posts;
+    }
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+};
 
 export default async function EditPostPage({
   params,

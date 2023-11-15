@@ -1,16 +1,34 @@
 import Container from "@/components/ui/container";
 import Post from "@/components/ui/post";
 import { PostProps } from "@/types";
-import { getPostsByCategoryName } from "@/actions/getPostsByCategoryName";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+
+const getPostsByCategoryName = async (
+  catName: string
+): Promise<PostProps[] | null> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXTAUTH_URL}/api/categories/${catName}`,
+      { cache: "no-store" }
+    );
+
+    if (response.ok) {
+      const categories = await response.json();
+      const posts = categories.posts;
+      return posts;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+  return null;
+};
 
 export default async function CategoryPage({
   params,
 }: {
   params: { categoryName: string };
 }) {
-  const posts: PostProps[] = await getPostsByCategoryName(params.categoryName);
+  const posts = await getPostsByCategoryName(params.categoryName);
 
   return (
     <main className="w-full h-full">
@@ -21,12 +39,12 @@ export default async function CategoryPage({
           </h1>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-11">
-            {posts.length > 0 &&
+            {posts &&
               posts.map((post: PostProps) => <Post key={post.id} {...post} />)}
           </div>
 
           <div className="w-full h-full py-11">
-            {posts.length === 0 && (
+            {!posts && (
               <p className="w-full text-muted-foreground text-center text-sm mx-auto">
                 No posts
               </p>
