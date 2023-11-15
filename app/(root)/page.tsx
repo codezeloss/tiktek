@@ -16,7 +16,12 @@ export default async function Home() {
           <CategoriesList />
 
           <div className="space-y-4">
-            {posts.length > 0 && <Post {...posts[posts.length - 1]} />}
+            {posts.length > 0 ? (
+              <Post {...posts[posts.length - 1]} />
+            ) : (
+              <div></div>
+            )}
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4">
               {posts.length > 0 &&
                 posts.map((post: PostProps) => (
@@ -36,8 +41,10 @@ export default async function Home() {
                 </div>
               )}
             </div>
-            {posts.length >= 3 && <Post {...posts[2]} />}
-            {posts.length >= 5 && <Post {...posts[4]} />}
+
+            {posts.length >= 3 ? <Post {...posts[2]} /> : <div></div>}
+
+            {posts.length >= 5 ? <Post {...posts[4]} /> : <div></div>}
           </div>
         </div>
       </Container>
