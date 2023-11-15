@@ -18,7 +18,7 @@ export default async function PostPage({
     <main className="mb-11 pt-8 space-y-4">
       <div className="relative w-full h-[300px] max-h-[300px] border px-0 mx-0">
         <div className="absolute w-full h-[300px] overflow-hidden">
-          {post.imageUrl ? (
+          {post?.imageUrl ? (
             <Image
               className="object-cover"
               src={post.imageUrl}

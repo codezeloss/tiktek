@@ -144,8 +144,9 @@ export default function PostForm() {
       setIsLoading(true);
       const response = await axios.post("/api/posts", values);
       if (response.data) {
-        router.push("/dashboard");
         toast.success("Post created successfully");
+        router.push("/dashboard");
+        router.refresh();
         setIsLoading(false);
       }
     } catch (e) {

@@ -153,8 +153,9 @@ export default function EditPostForm({ post }: { post: PostProps }) {
         links: addedLinks,
       });
       if (response.data) {
-        router.push("/dashboard");
         toast.success("Post updated successfully");
+        router.push("/dashboard");
+        router.refresh();
         setIsLoading(false);
       }
     } catch (e) {

@@ -27,8 +27,8 @@ export default function PostActions({ id }: { id: string }) {
       const response = await axios.delete(`/api/posts/${id}`);
       if (response.data) {
         console.log(response.data);
-        router.refresh();
         toast.success("Post deleted successfully");
+        router.refresh();
         const { publicId } = await response.data;
         await deleteImage(publicId);
         setIsLoading(false);

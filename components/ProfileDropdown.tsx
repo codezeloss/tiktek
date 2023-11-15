@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -13,8 +15,8 @@ import { LogOutIcon } from "lucide-react";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import Spinner from "@/components/ui/spinner";
-import { StaticImport } from "next/dist/shared/lib/get-img-props";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface Props {
   img_src: any;
@@ -23,7 +25,16 @@ interface Props {
 }
 
 export default function ProfileDropdown({ img_src, username, status }: Props) {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+
+  const handleSignOut = async () => {
+    setIsLoading(true);
+    await signOut();
+    setIsLoading(false);
+    router.refresh();
+    router.push("/");
+  };
 
   if (status === "loading") return <Spinner />;
 
@@ -67,11 +78,7 @@ export default function ProfileDropdown({ img_src, username, status }: Props) {
             className="w-full flex gap-x-2 items-center font-medium"
             variant="destructive"
             size="default"
-            onClick={async () => {
-              setIsLoading(true);
-              await signOut();
-              setIsLoading(false);
-            }}
+            onClick={handleSignOut}
           >
             <LogOutIcon size={16} />
             Sign out

@@ -66,7 +66,7 @@ export default async function Post({
 
           <Link href={`/post/${id}`}>
             <h2 className="text-xl sm:text-2xl font-semibold my-2 hover:underline cursor-pointer">
-              {title?.substring(0, 44)}...
+              {title?.substring(0, 20)}...
             </h2>
           </Link>
 
