@@ -14,7 +14,7 @@ const poppinsFont = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Cipiux | Home",
+  title: "Cipiux",
   description: "Tech blog website, the best and the only in the www",
 };
 
@@ -32,7 +32,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             <ToasterProvider />
             <div className="flex flex-col w-full h-full min-h-screen">
               <Navbar />
-              <main className="flex-auto p-6">{children}</main>
+              <main className="flex-auto px-3 py-6 sm:p-6">{children}</main>
               <Footer />
             </div>
           </NextAuthProvider>

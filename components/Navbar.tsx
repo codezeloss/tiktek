@@ -18,7 +18,7 @@ export default function Navbar() {
   const [openLoginDialog, setOpenLoginDialog] = useState(false);
 
   return (
-    <header className="border-b px-6">
+    <header className="border-b px-3 sm:px-6">
       <LoginDialog
         open={openLoginDialog}
         onOpen={() => setOpenLoginDialog(!openLoginDialog)}
